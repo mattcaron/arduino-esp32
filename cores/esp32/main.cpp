@@ -18,6 +18,7 @@
 #endif
 
 TaskHandle_t loopTaskHandle = NULL;
+TaskHandle_t subTaskHandle = NULL;
 
 #if CONFIG_AUTOSTART_ARDUINO
 #if CONFIG_FREERTOS_UNICORE
@@ -37,6 +38,7 @@ __attribute__((weak)) size_t getArduinoLoopTaskStackSize(void) {
     return ARDUINO_LOOP_STACK_SIZE;
 }
 
+// Main task
 void loopTask(void *pvParameters)
 {
     setup();
@@ -51,6 +53,22 @@ void loopTask(void *pvParameters)
         if (serialEventRun) serialEventRun();
     }
 }
+
+// Subtask - same as main task, but doesn't run serial events.
+void loop2Task(void *pvParameters)
+{
+    setup2();
+    for(;;) {
+#if CONFIG_FREERTOS_UNICORE
+        yieldIfNecessary();
+#endif
+        if(loopTaskWDTEnabled){
+            esp_task_wdt_reset();
+        }
+        loop2();
+    }
+}
+
 
 extern "C" void app_main()
 {
@@ -69,6 +87,7 @@ extern "C" void app_main()
     loopTaskWDTEnabled = false;
     initArduino();
     xTaskCreateUniversal(loopTask, "loopTask", getArduinoLoopTaskStackSize(), NULL, 1, &loopTaskHandle, ARDUINO_RUNNING_CORE);
+    xTaskCreateUniversal(loop2Task, "loop2Task", getArduinoLoopTaskStackSize(), NULL, 1, &subTaskHandle, ARDUINO_RUNNING_CORE);
 }
 
 #endif

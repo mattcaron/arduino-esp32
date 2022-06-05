@@ -129,6 +129,8 @@ typedef unsigned int word;
 #ifdef __cplusplus
 void setup(void);
 void loop(void);
+void setup2(void);
+void loop2(void);
 
 long random(long, long);
 #endif

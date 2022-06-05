@@ -1,3 +1,7 @@
+# IMPORTANT
+
+This has been modified to have 2 setup and loop functions - setup() and loop() run as one would normally expect. setup2() and loop2() run in a second task as befits the dual core nature of the ESP32 line of CPUs.
+
 # Arduino core for the ESP32, ESP32-S2, ESP32-S3 and ESP32-C3
 
 ![Build Status](https://github.com/espressif/arduino-esp32/workflows/ESP32%20Arduino%20CI/badge.svg) [![Documentation Status](https://readthedocs.com/projects/espressif-arduino-esp32/badge/?version=latest)](https://docs.espressif.com/projects/arduino-esp32/en/latest/?badge=latest)
